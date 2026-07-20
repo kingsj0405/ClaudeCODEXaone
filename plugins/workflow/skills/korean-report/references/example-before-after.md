@@ -2,6 +2,10 @@
 
 아래 내용은 **이 스킬을 설명하기 위해 지어낸 가상의 실험**이다. 실제 제품이나 측정치가 아니다.
 
+아래 한국어 리포트를 HTML 템플릿에 채운 결과는
+[`../examples/example-report.html`](../examples/example-report.html)에 있다
+([브라우저에서 바로 보기](https://raw.githack.com/kingsj0405/ClaudeCODEXaone/main/plugins/workflow/skills/korean-report/examples/example-report.html)).
+
 ---
 
 ## 입력 (영어 초안)

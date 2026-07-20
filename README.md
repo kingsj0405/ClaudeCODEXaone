@@ -202,9 +202,32 @@ roster 키는 세 가지다.
 [예시 파일](./plugins/workflow/skills/korean-report/references/example-before-after.md)에
 영어 초안 한 편과 그 결과물이 나란히 들어 있다.
 
+#### HTML 리포트
+
 HTML로 달라고 하면 [단일 파일 템플릿](./plugins/workflow/skills/korean-report/assets/report-template.html)에
 본문을 채워 준다 — 외부 자원을 전혀 안 불러오고 밝은 화면과 어두운 화면을 모두 지원해서
-그대로 첨부해 보낼 수 있다.
+파일 하나를 그대로 첨부해 보낼 수 있다.
+
+실제로 채워진 결과물이
+[`examples/example-report.html`](./plugins/workflow/skills/korean-report/examples/example-report.html)에
+들어 있다. GitHub·GitLab은 저장소 안의 `.html`을 렌더링하지 않고 소스로만 보여주므로,
+브라우저에서 바로 보려면 아래 미리보기 링크를 쓴다.
+
+- **[▶ 예시 리포트 미리보기 (raw.githack.com)](https://raw.githack.com/kingsj0405/ClaudeCODEXaone/main/plugins/workflow/skills/korean-report/examples/example-report.html)**
+- [같은 파일 · htmlpreview.github.io 경유](https://htmlpreview.github.io/?https://github.com/kingsj0405/ClaudeCODEXaone/blob/main/plugins/workflow/skills/korean-report/examples/example-report.html)
+
+두 링크 모두 제3자 서비스가 이 저장소의 원본 파일을 대신 서빙하는 방식이라 별도 설정이
+필요 없다. 다만 서비스가 죽으면 링크도 죽으므로, 확실한 방법은 파일을 받아서 브라우저로
+직접 여는 것이다:
+
+```bash
+git clone https://github.com/kingsj0405/ClaudeCODEXaone.git
+open ClaudeCODEXaone/plugins/workflow/skills/korean-report/examples/example-report.html
+```
+
+> 사내 GitLab 등 외부에서 접근할 수 없는 저장소에 두면 위 미리보기 서비스는 파일을 못
+> 읽는다. 그런 곳에서는 clone 후 로컬에서 열거나, GitHub Pages / GitLab Pages를 켜서
+> 직접 서빙해야 한다.
 
 ---
 

@@ -121,6 +121,9 @@ description: Rewrite an English draft (notes, a paper summary, an experiment log
 외부 자원을 전혀 불러오지 않는 단일 파일이라 그대로 첨부해 보낼 수 있고, 밝은 화면과 어두운
 화면을 모두 지원한다.
 
+`examples/example-report.html`이 그 템플릿을 실제로 채운 결과다 — 위 예시의 한국어 리포트가
+그대로 들어 있다. 어느 문단을 `.lede`에 넣고 표를 어떻게 감싸는지는 그 파일을 보고 따른다.
+
 지킬 것:
 
 - 이미지는 base64로 인라인한다. 외부 `src`를 걸면 받는 사람 화면에서 깨진다.

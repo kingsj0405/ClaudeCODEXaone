@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>검색 인덱스 미리 읽기 실험 결과</title>
+<style>
+  :root {
+    --bg: #fbfbfa;
+    --fg: #23201d;
+    --muted: #6b655e;
+    --rule: #e2ded8;
+    --accent: #8a4b2a;
+    --card: #ffffff;
+    --code-bg: #f2efea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171614;
+      --fg: #e8e4de;
+      --muted: #9b948b;
+      --rule: #322e2a;
+      --accent: #d99a6c;
+      --card: #1e1c1a;
+      --code-bg: #262320;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #fbfbfa; --fg: #23201d; --muted: #6b655e; --rule: #e2ded8;
+    --accent: #8a4b2a; --card: #ffffff; --code-bg: #f2efea;
+  }
+  :root[data-theme="dark"] {
+    --bg: #171614; --fg: #e8e4de; --muted: #9b948b; --rule: #322e2a;
+    --accent: #d99a6c; --card: #1e1c1a; --code-bg: #262320;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+                 "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.25rem 6rem; }
+
+  h1 {
+    font-size: 1.85rem; line-height: 1.35; letter-spacing: -0.01em;
+    margin: 0 0 0.35rem;
+  }
+  .meta { color: var(--muted); font-size: 0.9rem; margin: 0 0 2.5rem; }
+  h2 {
+    font-size: 1.25rem; margin: 3rem 0 0.9rem; padding-top: 1.6rem;
+    border-top: 1px solid var(--rule); letter-spacing: -0.01em;
+  }
+  h3 { font-size: 1.02rem; margin: 2rem 0 0.6rem; }
+  p { margin: 0 0 1.15rem; }
+  strong { font-weight: 650; }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  .lede {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 1.15rem 1.35rem;
+    margin: 0 0 2.5rem;
+  }
+  .lede p:last-child { margin-bottom: 0; }
+
+  .notice {
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+    padding: 0.7rem 1rem;
+    margin: 0 0 2rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .notice p { margin: 0; }
+
+  ul, ol { margin: 0 0 1.15rem; padding-left: 1.35rem; }
+  li { margin-bottom: 0.4rem; }
+
+  .scroll { overflow-x: auto; margin: 0 0 1.5rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+  th, td {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+  th { font-weight: 650; color: var(--muted); font-size: 0.85rem; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  code {
+    background: var(--code-bg); border-radius: 4px;
+    padding: 0.1em 0.35em; font-size: 0.88em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  pre {
+    background: var(--code-bg); border-radius: 6px;
+    padding: 1rem; overflow-x: auto; line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; }
+
+  figure { margin: 0 0 1.5rem; }
+  img { max-width: 100%; height: auto; border-radius: 6px; display: block; }
+  figcaption { color: var(--muted); font-size: 0.87rem; margin-top: 0.5rem; }
+
+  blockquote {
+    margin: 0 0 1.15rem; padding: 0.1rem 0 0.1rem 1rem;
+    border-left: 2px solid var(--rule); color: var(--muted);
+  }
+
+  .caveat { color: var(--muted); font-size: 0.92rem; }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    h2 { break-after: avoid; }
+    .lede { border-left-color: #888; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>검색 인덱스 미리 읽기 실험 결과</h1>
+  <p class="meta">플랫폼팀 · 2026-07-20 · 대상 독자: 검색 서비스 운영 담당</p>
+
+  <div class="notice">
+    <p><strong>이 문서는 <code>korean-report</code> 스킬의 출력 예시입니다.</strong>
+    영어 초안 하나를 이 스킬로 다시 쓴 결과이며, 실험과 수치는 설명을 위해 지어낸
+    가상의 것입니다. 원본 영어 초안과 나란히 놓은 비교는
+    <a href="../references/example-before-after.md">example-before-after.md</a>에 있습니다.</p>
+  </div>
+
+  <div class="lede">
+    <p>미리 읽기(prefetch)는 꼬리 지연을 확실히 줄이지만, 줄어든 지연을 저장 계층의 읽기
+    IOPS로 사는 구조다. 따라서 <strong>IOPS 여유가 있을 때만 이득</strong>이고, 여유가
+    없으면 오히려 손해가 난다. 바이그램 예측 모델을 쓰지 않고 인기 샤드 고정 목록만 미리
+    읽는 단순한 방식이 이득의 대부분을 가져오면서 IOPS 부담은 훨씬 적었다. 이 단순한 쪽으로
+    진행할 것을 권한다.</p>
+  </div>
+
+  <h2 id="background">배경</h2>
+  <p>검색 서비스는 요청마다 인덱스를 동기로 조회한다. 이전 프로파일링에서 꼬리 지연(p99)의
+  대부분이 포스팅 리스트 샤드의 캐시 미스에서 나온다는 것이 확인됐고, 특히 트래픽이 몰릴 때
+  p99가 나빠졌다. 이 실험은 그 미스를 미리 읽기로 줄일 수 있는지 확인한 것이다.</p>
+
+  <h2 id="method">방법</h2>
+  <p>질의가 들어오면 어떤 샤드를 읽게 될지 예측해, 실제로 필요해지기 전에 비동기로 읽어 두는
+  장치를 붙였다. 예측에는 프로덕션 질의 로그 1주일치로 학습한 바이그램 모델을 썼다.</p>
+  <p>평가는 섀도 환경에서 대조군과 비교하는 방식으로 했다. <strong>섀도 환경의 트래픽은
+  프로덕션의 약 40% 수준</strong>이므로, 아래 IOPS 관련 수치는 프로덕션에서 그대로
+  재현되지 않는다.</p>
+
+  <h2 id="results">결과</h2>
+  <p>바이그램 모델을 쓴 미리 읽기는 대조군 대비 p99 지연을 23% 줄였고, 캐시 적중률은
+  71%에서 88%로 올랐다. p50은 사실상 변화가 없었다 — 미리 읽기는 평균이 아니라 꼬리를
+  고치는 장치이므로 예상된 결과다.</p>
+
+  <p>대신 저장 계층의 읽기 IOPS가 2.4배로 뛰었다. 실험 중 15분 동안 저장 계층이 할당된
+  IOPS 상한에 닿았고, <strong>그 구간에서는 미리 읽기 쪽 p99가 대조군보다 오히려
+  나빴다.</strong></p>
+
+  <p>바이그램 모델을 빼고 가장 많이 쓰이는 샤드의 고정 목록만 미리 읽어 보니, p99는 19%
+  줄었고 IOPS는 1.6배에 그쳤다. 즉 모델이 만들어 낸 추가 이득은 p99 4%p인데, 그 대가로
+  IOPS가 0.8배 더 들었다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>구성</th>
+          <th class="num">p99 개선</th>
+          <th class="num">캐시 적중률</th>
+          <th class="num">읽기 IOPS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>대조군 (미리 읽기 없음)</td><td class="num">—</td><td class="num">71%</td><td class="num">1.0배</td></tr>
+        <tr><td>바이그램 모델 예측</td><td class="num">23%</td><td class="num">88%</td><td class="num">2.4배</td></tr>
+        <tr><td>인기 샤드 고정 목록</td><td class="num">19%</td><td class="num">(미측정)</td><td class="num">1.6배</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="discussion">해석</h2>
+  <p>숫자가 말하는 것은 “미리 읽기가 빠르다”가 아니라 <strong>“미리 읽기는 IOPS를 지연으로
+  바꾸는 환율이고, 그 환율이 구성마다 다르다”</strong>는 것이다. 바이그램 모델의 환율은 고정
+  목록보다 나쁘다. 모델을 학습시키고 계속 갱신하는 비용까지 더하면 차이는 더 벌어진다.</p>
+
+  <p>상한에 닿았을 때 p99가 대조군보다 나빠졌다는 관측이 특히 중요하다. 이 방식은 여유가
+  없을 때 성능이 완만하게 나빠지는 게 아니라 이득이 뒤집힌다. 프로덕션에 넣는다면 IOPS
+  사용률을 보고 미리 읽기를 자동으로 끄는 장치가 함께 있어야 한다.</p>
+
+  <h2 id="limits">한계와 다음</h2>
+  <p class="caveat">섀도 환경 트래픽이 프로덕션의 40%였으므로 <strong>프로덕션에서 IOPS
+  상한에 얼마나 자주 닿을지는 이 실험으로 알 수 없다.</strong> 고정 목록 구성의 캐시
+  적중률은 재지 않았다. 다음으로 할 일은 프로덕션 IOPS 여유를 실측하고, 그 위에서 고정
+  목록 구성만 다시 재는 것이다.</p>
+
+</main>
+</body>
+</html>

@@ -86,16 +86,24 @@ claude plugin install exaone-friendli
 claude plugin install workflow
 ```
 
-Codex도 위원회에 넣고 싶다면 OpenAI가 공식 배포하는 플러그인을 함께 깐다:
+### 3. Codex 플러그인 (선택)
+
+`/council`의 기본 roster에는 Codex가 들어 있다. Codex를 부르려면 OpenAI가 공식 배포하는
+[**openai/codex-plugin-cc**](https://github.com/openai/codex-plugin-cc)를 따로 설치해야
+한다. 이 저장소에는 포함되어 있지 않다.
 
 ```bash
 claude plugin marketplace add openai/codex-plugin-cc
 claude plugin install codex
 ```
 
-Codex가 없어도 나머지는 그대로 동작한다 — `/council`이 roster에서 알아서 뺀다.
+설치하면 `codex:codex-rescue` 서브에이전트가 생기고, `/council`이 이걸 통해 Codex를 부른다.
+[Codex CLI](https://github.com/openai/codex) 로그인이 되어 있어야 실제로 응답한다.
 
-### 3. opencode provider 설정
+**Codex가 없어도 나머지는 그대로 동작한다** — `/council`이 roster에서 알아서 빼고 한 번
+경고한 뒤 진행한다. Codex 없이 쓰려면 `--roster kexaone,claude-self`처럼 명시해도 된다.
+
+### 4. opencode provider 설정
 
 opencode는 **글로벌 설정**(`~/.config/opencode/opencode.json`)만 참조한다. 프로젝트 로컬
 `opencode.jsonc`만 두면 동작하지 않는다.
@@ -164,9 +172,16 @@ Claude가 직접 답하지 않고 K-EXAONE의 출력을 그대로 가져온다. 
 `output/council-{시각}-{슬러그}/round-N.md`에 쌓인다. 끝나면 `final.md` 한 장이 떨어지므로
 후속 세션에서는 그것만 첨부하면 된다.
 
-roster 키는 `codex` / `kexaone` / `claude-self`. `claude-self`는 이 대화를 못 본 Claude
-서브에이전트라 사회자가 이미 받아들인 전제를 되묻는 역할을 한다 — 유용하지만 독립된 *모델*은
-아니므로 종합할 때 그렇게 표시된다.
+roster 키는 세 가지다.
+
+| 키 | 누구 | 필요한 것 |
+|---|---|---|
+| `codex` | Codex | [openai/codex-plugin-cc](https://github.com/openai/codex-plugin-cc) 별도 설치 ([설치 3단계](#3-codex-플러그인-선택)) |
+| `kexaone` | K-EXAONE 236B | 이 저장소의 `exaone-friendli` 플러그인 + Friendli 토큰 |
+| `claude-self` | Claude (빈 컨텍스트) | 없음 |
+
+`claude-self`는 이 대화를 못 본 Claude 서브에이전트라 사회자가 이미 받아들인 전제를 되묻는
+역할을 한다 — 유용하지만 독립된 *모델*은 아니므로 종합할 때 그렇게 표시된다.
 
 `.claude/council-state.json`에 상태가 남아서 `/clear` 이후에도 이어갈 수 있다.
 
@@ -247,6 +262,8 @@ Apache-2.0. 이 저장소가 호출하는 모델과 서비스에는 각자의 �
 
 Install: `claude plugin marketplace add https://github.com/kingsj0405/ClaudeCODEXaone.git`, then
 `claude plugin install exaone-friendli workflow`. You will need `npm i -g opencode-ai` and a
-FriendliAI token. See [설치](#설치) above.
+FriendliAI token. To include Codex in `/council`, also install OpenAI's
+[codex-plugin-cc](https://github.com/openai/codex-plugin-cc) — it is not bundled here, and
+`/council` simply drops Codex from the roster if it is missing. See [설치](#설치) above.
 
 Unofficial personal project; not affiliated with Anthropic, OpenAI, LG AI Research, or FriendliAI.

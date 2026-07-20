@@ -1,0 +1,9 @@
+{
+  "name": "exaone-friendli",
+  "version": "0.1.0",
+  "description": "Call K-EXAONE 236B (LG AI Research, served by FriendliAI) from Claude Code via the opencode CLI: /k-exaone.",
+  "author": {
+    "name": "kingsj0405",
+    "email": "kingsj0405@gmail.com"
+  }
+}

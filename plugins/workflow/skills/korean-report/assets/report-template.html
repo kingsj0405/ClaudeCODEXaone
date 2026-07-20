@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>리포트 제목</title>
+<style>
+  :root {
+    --bg: #fbfbfa;
+    --fg: #23201d;
+    --muted: #6b655e;
+    --rule: #e2ded8;
+    --accent: #8a4b2a;
+    --card: #ffffff;
+    --code-bg: #f2efea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171614;
+      --fg: #e8e4de;
+      --muted: #9b948b;
+      --rule: #322e2a;
+      --accent: #d99a6c;
+      --card: #1e1c1a;
+      --code-bg: #262320;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #fbfbfa; --fg: #23201d; --muted: #6b655e; --rule: #e2ded8;
+    --accent: #8a4b2a; --card: #ffffff; --code-bg: #f2efea;
+  }
+  :root[data-theme="dark"] {
+    --bg: #171614; --fg: #e8e4de; --muted: #9b948b; --rule: #322e2a;
+    --accent: #d99a6c; --card: #1e1c1a; --code-bg: #262320;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+                 "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.25rem 6rem; }
+
+  h1 {
+    font-size: 1.85rem; line-height: 1.35; letter-spacing: -0.01em;
+    margin: 0 0 0.35rem;
+  }
+  .meta { color: var(--muted); font-size: 0.9rem; margin: 0 0 2.5rem; }
+  h2 {
+    font-size: 1.25rem; margin: 3rem 0 0.9rem; padding-top: 1.6rem;
+    border-top: 1px solid var(--rule); letter-spacing: -0.01em;
+  }
+  h3 { font-size: 1.02rem; margin: 2rem 0 0.6rem; }
+  p { margin: 0 0 1.15rem; }
+  strong { font-weight: 650; }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  /* 결론 문단 — 리포트 맨 앞 한 덩어리 */
+  .lede {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 1.15rem 1.35rem;
+    margin: 0 0 2.5rem;
+  }
+  .lede p:last-child { margin-bottom: 0; }
+
+  ul, ol { margin: 0 0 1.15rem; padding-left: 1.35rem; }
+  li { margin-bottom: 0.4rem; }
+
+  /* 넓은 표는 페이지가 아니라 표가 스크롤된다 */
+  .scroll { overflow-x: auto; margin: 0 0 1.5rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+  th, td {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+  th { font-weight: 650; color: var(--muted); font-size: 0.85rem; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  code {
+    background: var(--code-bg); border-radius: 4px;
+    padding: 0.1em 0.35em; font-size: 0.88em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  pre {
+    background: var(--code-bg); border-radius: 6px;
+    padding: 1rem; overflow-x: auto; line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; }
+
+  figure { margin: 0 0 1.5rem; }
+  img { max-width: 100%; height: auto; border-radius: 6px; display: block; }
+  figcaption { color: var(--muted); font-size: 0.87rem; margin-top: 0.5rem; }
+
+  blockquote {
+    margin: 0 0 1.15rem; padding: 0.1rem 0 0.1rem 1rem;
+    border-left: 2px solid var(--rule); color: var(--muted);
+  }
+
+  .caveat { color: var(--muted); font-size: 0.92rem; }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    h2 { break-after: avoid; }
+    .lede { border-left-color: #888; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>리포트 제목 — 무엇을 알아냈는지가 드러나게</h1>
+  <p class="meta">작성자 · 2026-07-20 · 대상 독자</p>
+
+  <!-- 결론: 3~5문장. 이 상자만 읽어도 판단이 서야 한다. -->
+  <div class="lede">
+    <p>결론을 여기에 쓴다. 무엇을 했고, 무엇이 나왔고, 그래서 무엇을 하면 되는지.
+    조건부 결론이라면 조건을 먼저 밝힌다.</p>
+  </div>
+
+  <h2 id="background">배경</h2>
+  <p>독자가 모를 전제만 쓴다. 이미 아는 이야기를 반복하면 결론까지 가는 길이 멀어진다.</p>
+
+  <h2 id="method">방법</h2>
+  <p>재현에 필요한 만큼만 쓴다. 측정 환경이 실제 환경과 다르면 <strong>그 차이를 여기서
+  밝힌다</strong> — 뒤에 나올 숫자의 해석이 전부 여기에 달려 있다.</p>
+
+  <h2 id="results">결과</h2>
+  <p>숫자는 측정 조건과 함께 쓴다. 재지 않은 값은 비워 두지 말고 “(미측정)”이라고 적는다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>구성</th><th class="num">지표 A</th><th class="num">지표 B</th><th>비고</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>대조군</td><td class="num">—</td><td class="num">1.0배</td><td>기준</td></tr>
+        <tr><td>구성 1</td><td class="num">23%</td><td class="num">2.4배</td><td></td></tr>
+        <tr><td>구성 2</td><td class="num">19%</td><td class="num">1.6배</td><td>지표 A 미측정</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 이미지는 반드시 base64로 인라인한다. 외부 src는 받는 사람 화면에서 깨진다.
+  <figure>
+    <img src="data:image/png;base64,..." alt="설명">
+    <figcaption>그림 1. 캡션도 조건을 포함한다.</figcaption>
+  </figure>
+  -->
+
+  <h2 id="discussion">해석</h2>
+  <p>숫자가 뜻하는 것과 <em>뜻하지 않는 것</em>을 함께 쓴다. 후자를 빼면 다음 사람이
+  반드시 과잉 해석한다.</p>
+
+  <h2 id="limits">한계와 다음</h2>
+  <p class="caveat">안 해본 것, 이 실험으로는 알 수 없는 것, 다음에 잴 것.</p>
+
+</main>
+</body>
+</html>

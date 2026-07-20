@@ -1,0 +1,40 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "*": "ask",
+    "read": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "todowrite": "allow",
+    "todoread": "allow",
+    "bash": {
+      "*": "ask",
+      "ls *": "allow",
+      "tail *": "allow",
+      "head *": "allow",
+      "wc *": "allow",
+      "grep *": "allow"
+    }
+  },
+  "model": "friendli/LGAI-EXAONE/K-EXAONE-236B-A23B",
+  "share": "disabled",
+  "provider": {
+    "friendli": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Friendli AI",
+      "options": {
+        "baseURL": "https://api.friendli.ai/serverless/v1",
+        "apiKey": "<YOUR_FRIENDLI_TOKEN>"
+      },
+      "models": {
+        "LGAI-EXAONE/K-EXAONE-236B-A23B": {
+          "name": "K-EXAONE 236B",
+          "limit": {
+            "context": 262144,
+            "output": 32768
+          }
+        }
+      }
+    }
+  }
+}

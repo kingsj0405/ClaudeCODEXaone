@@ -1,0 +1,32 @@
+{
+  "name": "claudecodexaone",
+  "owner": {
+    "name": "kingsj0405",
+    "email": "kingsj0405@gmail.com"
+  },
+  "metadata": {
+    "description": "Claude Code + Codex + K-EXAONE — multi-model delegation, a council skill, and a Korean report-writing skill."
+  },
+  "plugins": [
+    {
+      "name": "exaone-friendli",
+      "description": "Call K-EXAONE 236B (LG AI Research, served by FriendliAI) from Claude Code via the opencode CLI: /k-exaone.",
+      "version": "0.1.0",
+      "author": {
+        "name": "kingsj0405",
+        "email": "kingsj0405@gmail.com"
+      },
+      "source": "./plugins/exaone-friendli"
+    },
+    {
+      "name": "workflow",
+      "description": "Multi-model workflows: /council (round-based deliberation across Claude, Codex, and K-EXAONE) and the korean-report writing skill.",
+      "version": "0.1.0",
+      "author": {
+        "name": "kingsj0405",
+        "email": "kingsj0405@gmail.com"
+      },
+      "source": "./plugins/workflow"
+    }
+  ]
+}

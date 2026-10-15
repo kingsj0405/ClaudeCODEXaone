@@ -1,5 +1,10 @@
 # ClaudeCODEXaone (클코덱사원)
 
+> ⚠️ **이 저장소는 더 이상 동작하지 않습니다 (2026-08-28 이후).**
+> 기본 모델 경로인 FriendliAI Serverless의 K-EXAONE 236B가 2026-08-28에 내려가서 `/k-exaone`이 실패합니다.
+> `/council`의 K-EXAONE 참가자도 같은 이유로 응답하지 않습니다. `korean-report` 스킬은 모델 호출이 없어 그대로 쓸 수 있습니다.
+> LG AI Research 사내 사용자는 사내 GitLab의 후속 판(`exaone-for-claude-code`)을 쓰세요. 이 저장소는 더 갱신하지 않습니다.
+
 Claude Code 안에서 **Claude · Codex · K-EXAONE** 세 모델을 함께 쓰기 위한 플러그인 묶음.
 
 - `/k-exaone` — K-EXAONE 236B(LG AI Research, FriendliAI 서빙)에게 물어본다

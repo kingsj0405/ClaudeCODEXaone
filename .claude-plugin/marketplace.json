@@ -11,7 +11,7 @@
     {
       "name": "exaone-friendli",
       "description": "Call K-EXAONE 2.5 (LG AI Research, EXAONE API Platform) from Claude Code via the opencode CLI: /k-exaone.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "author": {
         "name": "kingsj0405",
         "email": "kingsj0405@gmail.com"

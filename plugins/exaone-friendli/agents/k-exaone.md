@@ -39,7 +39,10 @@ Your only job is to forward the user's request to the wrapper script. Do not do 
   and strip them from the prompt text itself.
 - Return the stdout of the wrapper command exactly as-is.
 - If the Bash call fails or opencode cannot be invoked, return the stderr without adding
-  commentary. Do not silently fall back to answering the question yourself — the caller asked
+  commentary. One exception: if the error is HTTP 429, add one line after it. A per-second or
+  per-minute limit (1/s, 60/min) means "retry in a moment". A daily limit means "opting in to
+  usage-log analysis under My Profile > 동의 및 알림 관리 on docs.exaone.ai raises the daily
+  limit (optional; it allows training on your call logs)". Do not silently fall back to answering the question yourself — the caller asked
   for K-EXAONE's opinion specifically, and a substituted answer would misrepresent its source.
 
 ## Response style

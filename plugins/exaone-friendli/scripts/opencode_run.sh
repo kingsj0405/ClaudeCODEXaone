@@ -8,11 +8,11 @@
 # Examples:
 #   bash scripts/opencode_run.sh "Explain closures in Go"
 #   bash scripts/opencode_run.sh --format json "List files in src/"
-#   bash scripts/opencode_run.sh --model friendli/LGAI-EXAONE/K-EXAONE-236B-A23B "..."
+#   bash scripts/opencode_run.sh --model exaone/k-exaone_v2.5 "..."
 #
 # Env overrides:
 #   OPENCODE_MODEL              Override the default model
-#                               (default: friendli/LGAI-EXAONE/K-EXAONE-236B-A23B)
+#                               (default: exaone/k-exaone_v2.5)
 #   OPENCODE_BIN                Override opencode binary path (default: `opencode` on PATH)
 #   OPENCODE_INSECURE_TLS=1     Disable Node TLS certificate verification.
 #                               ONLY for networks behind a TLS-inspecting corporate proxy
@@ -22,7 +22,7 @@
 
 set -euo pipefail
 
-MODEL="${OPENCODE_MODEL:-friendli/LGAI-EXAONE/K-EXAONE-236B-A23B}"
+MODEL="${OPENCODE_MODEL:-exaone/k-exaone_v2.5}"
 OPENCODE_BIN="${OPENCODE_BIN:-opencode}"
 
 if [[ $# -eq 0 ]]; then

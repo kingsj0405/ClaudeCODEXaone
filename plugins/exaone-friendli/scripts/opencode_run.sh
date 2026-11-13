@@ -36,6 +36,21 @@ if ! command -v "$OPENCODE_BIN" >/dev/null 2>&1; then
   exit 127
 fi
 
+# The template reads the key from the environment; say how to get one instead of a bare 401.
+cfg_dir="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+if [[ -z "${EXAONE_API_KEY:-}" ]] \
+   && grep -qs '{env:EXAONE_API_KEY}' "$cfg_dir"/opencode.json*; then
+  cat >&2 <<'EOF'
+Error: EXAONE_API_KEY is not set.
+1. Sign in at https://docs.exaone.ai and issue an API key.
+2. Add `export EXAONE_API_KEY=...` to your shell profile, then restart Claude Code.
+3. (Optional) My Profile > 동의 및 알림 관리 > "(선택) 동의: AI 모델 학습 및 서비스 개선을
+   위한 이용 기록 분석" raises the DAILY call limit. It lets EXAONE use your call logs for
+   training. Per-second (1) and per-minute (60) limits stay the same.
+EOF
+  exit 3
+fi
+
 # If the caller already passed --model anywhere, do not inject our default.
 inject_model=1
 for arg in "$@"; do

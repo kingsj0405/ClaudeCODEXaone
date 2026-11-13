@@ -2,7 +2,7 @@
 
 > **2026-11-13 갱신:** FriendliAI Serverless 경로(2026-08-28 종료)를 걷어 내고, LG AI Research의
 > 공개 EXAONE API Platform에서 제공하는 **K-EXAONE 2.5**(`k-exaone_v2.5`)로 바꿨습니다.
-> 이미 설치했다면 플러그인을 업데이트하고 [opencode provider 설정](#4-opencode-provider-설정)을 새로 합치세요.
+> 이미 설치했다면 플러그인을 업데이트하고 [키 발급과 provider 설정](#4-exaone-api-키-발급--opencode-provider-설정)을 새로 합치세요.
 
 Claude Code 안에서 **Claude · Codex · K-EXAONE** 세 모델을 함께 쓰기 위한 플러그인 묶음.
 
@@ -40,7 +40,7 @@ K-EXAONE 2.5를 OpenAI 호환 API로 부른다.
 | 엔드포인트 | `https://api.exaone.ai/v1` (OpenAI 호환 `chat/completions`) |
 | 컨텍스트 | 524,288 토큰. `max_tokens`에는 추론 토큰도 포함된다 |
 | 추론 | 기본으로 켜져 있다. 추론은 `reasoning_content`로 따로 오고, 강도는 `reasoning_effort`(`low`·`medium`·`high`·`max`)로 정한다 |
-| 한도 | 2026-11 확인 기준 무료 키는 초당 1회, 분당 60회 |
+| 한도 | 2026-11 확인 기준 초당 1회, 분당 60회. 일일 한도는 [사용 동의](#4-exaone-api-키-발급--opencode-provider-설정)를 켜면 늘어난다 |
 | 문서 | [docs.exaone.ai](https://docs.exaone.ai) — 키 발급과 최신 한도는 여기서 확인한다 |
 
 > `chat_template_kwargs.enable_thinking: false`로 추론을 끄면 영어 추론문이 답(`content`)에
@@ -96,7 +96,22 @@ claude plugin install codex
 **Codex가 없어도 나머지는 그대로 동작한다** — `/council`이 roster에서 알아서 빼고 한 번
 경고한 뒤 진행한다. Codex 없이 쓰려면 `--roster kexaone,claude-self`처럼 명시해도 된다.
 
-### 4. opencode provider 설정
+### 4. EXAONE API 키 발급 + opencode provider 설정
+
+[EXAONE API Platform](https://docs.exaone.ai)에 로그인해 API 키를 발급받고, 셸 설정 파일
+(`~/.zshrc` 등)에 export해 둔다. 키가 없으면 `/k-exaone`이 이 안내를 그대로 보여 준다.
+
+```bash
+export EXAONE_API_KEY=...
+```
+
+> [!IMPORTANT]
+> **하루 호출 한도를 늘리려면 사용 동의를 켠다.**
+> 마이 프로필 > 동의 및 알림 관리 >
+> "(선택) 동의: AI 모델 학습 및 서비스 개선을 위한 이용 기록 분석"에 동의하면
+> 일일 호출 한도가 커진다([Rate Limits](https://docs.exaone.ai/ko/docs/rate-limits)).
+> 이 동의는 호출 기록을 모델 학습에 쓰도록 허락하는 것이며, 동의하지 않아도 API는 쓸 수 있다.
+> 초당 1회, 분당 60회 한도는 동의와 관계없이 같다.
 
 opencode는 **글로벌 설정**(`~/.config/opencode/opencode.json`)만 참조한다. 프로젝트 로컬
 `opencode.jsonc`만 두면 동작하지 않는다.
@@ -252,7 +267,8 @@ ClaudeCODEXaone/
 | `opencode CLI not found` | opencode 미설치 | `npm install -g opencode-ai` |
 | `Model not found` | 글로벌 opencode 설정에 provider 미등록 | `~/.config/opencode/opencode.json` 확인 (프로젝트 로컬 파일은 안 읽힘) |
 | 401 Unauthorized | `EXAONE_API_KEY`가 비었거나 만료됨 | opencode를 띄운 셸에서 `echo $EXAONE_API_KEY` 확인, 키 재발급 |
-| 429 Too Many Requests | 무료 키 한도(초당 1회) 초과 | `/council`처럼 동시에 부를 때 잠시 뒤 다시 실행 |
+| 429, `x-second-rate-limit-remaining: 0` | 초당 1회 또는 분당 60회 초과 | 잠시 뒤 다시 실행. `/council` 동시 호출에서 흔하다 |
+| 429, `x-day-rate-limit-remaining: 0` | 일일 한도 소진 | 마이 프로필에서 이용 기록 분석 동의를 켜면 일일 한도가 늘어난다(선택) |
 | `ProviderModelNotFoundError` | Claude Code 환경변수가 opencode 모델을 덮어씀 | 래퍼가 `--model`을 강제 주입하므로 재실행 |
 | 사내 프록시 뒤에서 TLS 오류 | TLS 검사 프록시가 자체 루트 CA를 주입 | `NODE_EXTRA_CA_CERTS`에 프록시 루트 CA를 지정. 최후 수단으로 `OPENCODE_INSECURE_TLS=1` (인증서 검증이 꺼지므로 권장하지 않음) |
 | `/council`에서 Codex가 빠짐 | codex 플러그인 미설치 | `claude plugin install codex` 또는 그대로 진행 |
@@ -282,7 +298,8 @@ Apache-2.0. 이 저장소가 호출하는 모델과 서비스에는 각자의 �
 
 Install: `claude plugin marketplace add https://github.com/kingsj0405/ClaudeCODEXaone.git`, then
 `claude plugin install exaone-friendli workflow`. You will need `npm i -g opencode-ai` and an
-`EXAONE_API_KEY`. To include Codex in `/council`, also install OpenAI's
+`EXAONE_API_KEY` from [docs.exaone.ai](https://docs.exaone.ai). Opting in to usage-log analysis
+(My Profile > consent settings) raises the daily call limit; per-second and per-minute limits stay the same. To include Codex in `/council`, also install OpenAI's
 [codex-plugin-cc](https://github.com/openai/codex-plugin-cc) — it is not bundled here, and
 `/council` simply drops Codex from the roster if it is missing. See [설치](#설치) above.
 

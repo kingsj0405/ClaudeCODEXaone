@@ -77,7 +77,7 @@ done
 
 echo ""
 echo "Done. Available globally:"
-echo "  /k-exaone        ask K-EXAONE 236B (FriendliAI)"
+echo "  /k-exaone        ask K-EXAONE 2.5 (EXAONE API Platform)"
 echo "  /council         multi-model round-based deliberation"
 echo "  korean-report    skill: rewrite an English draft as a Korean report"
 echo ""

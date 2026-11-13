@@ -10,8 +10,8 @@
   "plugins": [
     {
       "name": "exaone-friendli",
-      "description": "Call K-EXAONE 236B (LG AI Research, served by FriendliAI) from Claude Code via the opencode CLI: /k-exaone.",
-      "version": "0.1.0",
+      "description": "Call K-EXAONE 2.5 (LG AI Research, EXAONE API Platform) from Claude Code via the opencode CLI: /k-exaone.",
+      "version": "0.2.0",
       "author": {
         "name": "kingsj0405",
         "email": "kingsj0405@gmail.com"
@@ -21,7 +21,7 @@
     {
       "name": "workflow",
       "description": "Multi-model workflows: /council (round-based deliberation across Claude, Codex, and K-EXAONE) and the korean-report writing skill.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "kingsj0405",
         "email": "kingsj0405@gmail.com"

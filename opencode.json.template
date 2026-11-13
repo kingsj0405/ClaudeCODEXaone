@@ -16,23 +16,23 @@
       "grep *": "allow"
     }
   },
-  "model": "friendli/LGAI-EXAONE/K-EXAONE-236B-A23B",
+  "model": "exaone/k-exaone_v2.5",
   "share": "disabled",
   "provider": {
-    "friendli": {
+    "exaone": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Friendli AI",
+      "name": "EXAONE API Platform",
       "options": {
-        "baseURL": "https://api.friendli.ai/serverless/v1",
-        "apiKey": "<YOUR_FRIENDLI_TOKEN>"
+        "baseURL": "https://api.exaone.ai/v1",
+        "apiKey": "{env:EXAONE_API_KEY}"
       },
       "models": {
-        "LGAI-EXAONE/K-EXAONE-236B-A23B": {
-          "name": "K-EXAONE 236B",
-          "limit": {
-            "context": 262144,
-            "output": 32768
-          }
+        "k-exaone_v2.5": {
+          "name": "K-EXAONE 2.5",
+          "tool_call": true,
+          "reasoning": true,
+          "options": { "reasoning_effort": "medium" },
+          "limit": { "context": 524288, "output": 32768 }
         }
       }
     }

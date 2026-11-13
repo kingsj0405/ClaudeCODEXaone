@@ -14,7 +14,7 @@ Defaults:
 | roster key | subagent_type | model / source | requires |
 |---|---|---|---|
 | `codex` | `codex:codex-rescue` | Codex | the `codex` plugin from the `openai-codex` marketplace |
-| `kexaone` | `exaone-friendli:k-exaone` | K-EXAONE 236B / FriendliAI | the `exaone-friendli` plugin in this repo + a Friendli token |
+| `kexaone` | `exaone-friendli:k-exaone` | K-EXAONE 2.5 / EXAONE API Platform | the `exaone-friendli` plugin in this repo + an `EXAONE_API_KEY` |
 | `claude-self` | `general-purpose` | Claude, fresh context | nothing |
 
 `claude-self` is a Claude subagent with no memory of this conversation. It is a genuinely useful

@@ -1,17 +1,16 @@
 # ClaudeCODEXaone (클코덱사원)
 
-> ⚠️ **이 저장소는 더 이상 동작하지 않습니다 (2026-08-28 이후).**
-> 기본 모델 경로인 FriendliAI Serverless의 K-EXAONE 236B가 2026-08-28에 내려가서 `/k-exaone`이 실패합니다.
-> `/council`의 K-EXAONE 참가자도 같은 이유로 응답하지 않습니다. `korean-report` 스킬은 모델 호출이 없어 그대로 쓸 수 있습니다.
-> LG AI Research 사내 사용자는 사내 GitLab의 후속 판(`exaone-for-claude-code`)을 쓰세요. 이 저장소는 더 갱신하지 않습니다.
+> **2026-11-13 갱신:** FriendliAI Serverless 경로(2026-08-28 종료)를 걷어 내고, LG AI Research의
+> 공개 EXAONE API Platform에서 제공하는 **K-EXAONE 2.5**(`k-exaone_v2.5`)로 바꿨습니다.
+> 이미 설치했다면 플러그인을 업데이트하고 [opencode provider 설정](#4-opencode-provider-설정)을 새로 합치세요.
 
 Claude Code 안에서 **Claude · Codex · K-EXAONE** 세 모델을 함께 쓰기 위한 플러그인 묶음.
 
-- `/k-exaone` — K-EXAONE 236B(LG AI Research, FriendliAI 서빙)에게 물어본다
+- `/k-exaone` — K-EXAONE 2.5(LG AI Research, EXAONE API Platform)에게 물어본다
 - `/council` — 여러 모델을 라운드 단위로 돌리고 Claude가 사회를 본다
 - `korean-report` 스킬 — 영어 초안을 **좋은 한국어 리포트**로 다시 쓴다
 
-> 개인이 만든 비공식 프로젝트입니다. Anthropic · OpenAI · LG AI Research · FriendliAI 어디와도
+> 개인이 만든 비공식 프로젝트입니다. Anthropic · OpenAI · LG AI Research 어디와도
 > 제휴 관계가 없고, 각 상표는 해당 소유자의 것입니다.
 
 ---
@@ -29,47 +28,36 @@ Claude Code는 혼자서도 잘 하지만, 두 가지 상황에서 다른 모델
 
 ---
 
-## K-EXAONE 236B — 이 플러그인이 부르는 모델
+## K-EXAONE 2.5 — 이 플러그인이 부르는 모델
 
-[K-EXAONE](https://github.com/LG-AI-EXAONE/K-EXAONE)은 LG AI Research가 공개한 대규모
-Mixture-of-Experts 모델이다. 존재 자체가 아직 널리 알려지지 않아 짧게 소개해 둔다.
+[K-EXAONE](https://github.com/LG-AI-EXAONE/K-EXAONE)은 LG AI Research가 만든 대규모
+언어 모델 계열이다. 이 플러그인은 LG AI Research가 직접 운영하는 **EXAONE API Platform**의
+K-EXAONE 2.5를 OpenAI 호환 API로 부른다.
 
 | | |
 |---|---|
-| 구조 | Hybrid Attention MoE — 총 236B 파라미터, 추론 시 23B 활성 |
-| 컨텍스트 | 256K 네이티브 (FriendliAI 서빙 기준 262,144 토큰) |
-| 언어 | 한국어 · 영어 · 스페인어 · 독일어 · 일본어 · 베트남어 |
-| 강점 | 추론, 에이전트형 도구 사용, 긴 문서 이해, 한국어 |
-| 가중치 | [huggingface.co/LGAI-EXAONE/K-EXAONE-236B-A23B](https://huggingface.co/LGAI-EXAONE/K-EXAONE-236B-A23B) |
-| 서빙 | [FriendliAI Serverless](https://friendli.ai/models/LGAI-EXAONE/K-EXAONE-236B-A23B) |
+| 모델 ID | `k-exaone_v2.5` |
+| 엔드포인트 | `https://api.exaone.ai/v1` (OpenAI 호환 `chat/completions`) |
+| 컨텍스트 | 524,288 토큰. `max_tokens`에는 추론 토큰도 포함된다 |
+| 추론 | 기본으로 켜져 있다. 추론은 `reasoning_content`로 따로 오고, 강도는 `reasoning_effort`(`low`·`medium`·`high`·`max`)로 정한다 |
+| 한도 | 2026-11 확인 기준 무료 키는 초당 1회, 분당 60회 |
+| 문서 | [docs.exaone.ai](https://docs.exaone.ai) — 키 발급과 최신 한도는 여기서 확인한다 |
 
-3:1 하이브리드 어텐션에 128토큰 슬라이딩 윈도를 써서 긴 문서를 읽을 때 메모리를 아끼는 구조라,
-긴 설계 문서나 로그를 한 번에 통째로 넣고 물어보는 용도로 쓸 만하다.
-
-**요금**은 FriendliAI 모델 페이지에 공개되어 있다 (2026년 7월 확인 기준 입력 100만 토큰당
-$0.2, 캐시된 입력 $0.1, 출력 $0.8 — 최신 값은 위 링크에서 확인할 것). 별도 인프라 없이
-OpenAI 호환 API로 바로 부를 수 있다.
-
-### FriendliAI 문서
-
-- [Model APIs 시작하기](https://friendli.ai/docs/guides/model-apis/introduction) — 서버리스 API 사용법
-- [Dedicated Endpoints](https://friendli.ai/docs/guides/dedicated-endpoints/introduction) — 전용 엔드포인트가 필요할 때
-- [Container](https://friendli.ai/docs/guides/container/introduction) — 자체 인프라에 올릴 때
-- [K-EXAONE 서버리스 출시 글](https://friendli.ai/blog/k-exaone-on-serverless)
+> `chat_template_kwargs.enable_thinking: false`로 추론을 끄면 영어 추론문이 답(`content`)에
+> 섞여 나온다(2026-11 실측). 추론을 줄이고 싶으면 `reasoning_effort: "low"`를 쓴다.
 
 플러그인을 깔기 전에 API가 살아 있는지 먼저 확인하고 싶다면:
 
 ```bash
-curl https://api.friendli.ai/serverless/v1/chat/completions \
-  -H "Authorization: Bearer $FRIENDLI_TOKEN" \
+curl https://api.exaone.ai/v1/chat/completions \
+  -H "Authorization: Bearer $EXAONE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "LGAI-EXAONE/K-EXAONE-236B-A23B",
+    "model": "k-exaone_v2.5",
+    "reasoning_effort": "low",
     "messages": [{"role": "user", "content": "자기소개를 두 문장으로 해줘."}]
   }'
 ```
-
-토큰은 [FriendliAI 콘솔](https://friendli.ai/)에서 발급한다.
 
 ---
 
@@ -113,29 +101,32 @@ claude plugin install codex
 opencode는 **글로벌 설정**(`~/.config/opencode/opencode.json`)만 참조한다. 프로젝트 로컬
 `opencode.jsonc`만 두면 동작하지 않는다.
 
-이 저장소의 [`opencode.json.template`](./opencode.json.template)을 복사하고
-`<YOUR_FRIENDLI_TOKEN>`을 본인 토큰으로 바꾼다. 이미 쓰던 설정이 있다면 `provider` 블록만
-합치면 된다:
+이 저장소의 [`opencode.json.template`](./opencode.json.template)을 복사하고, 셸에
+`EXAONE_API_KEY`를 export해 둔다. 설정은 `{env:EXAONE_API_KEY}`로 키를 읽으므로 파일에
+키를 적지 않아도 된다. 이미 쓰던 설정이 있다면 `provider` 블록만 합치면 된다:
 
 ```jsonc
-"friendli": {
+"exaone": {
   "npm": "@ai-sdk/openai-compatible",
-  "name": "Friendli AI",
+  "name": "EXAONE API Platform",
   "options": {
-    "baseURL": "https://api.friendli.ai/serverless/v1",
-    "apiKey": "<YOUR_FRIENDLI_TOKEN>"
+    "baseURL": "https://api.exaone.ai/v1",
+    "apiKey": "{env:EXAONE_API_KEY}"
   },
   "models": {
-    "LGAI-EXAONE/K-EXAONE-236B-A23B": {
-      "name": "K-EXAONE 236B",
-      "limit": { "context": 262144, "output": 32768 }
+    "k-exaone_v2.5": {
+      "name": "K-EXAONE 2.5",
+      "tool_call": true,
+      "reasoning": true,
+      "options": { "reasoning_effort": "medium" },
+      "limit": { "context": 524288, "output": 32768 }
     }
   }
 }
 ```
 
-> 조직 계정이라 팀 지정이 필요하다면 `options.headers`에 `"X-Friendli-Team": "<TEAM_ID>"`를
-> 추가한다. 개인 토큰은 대개 필요 없다.
+> 예전 `friendli` provider 블록은 지워도 된다. 플러그인 이름 `exaone-friendli`는 설치 경로가
+> 바뀌지 않도록 그대로 두었다.
 
 ### 플러그인 설치가 막힐 때
 
@@ -182,7 +173,7 @@ roster 키는 세 가지다.
 | 키 | 누구 | 필요한 것 |
 |---|---|---|
 | `codex` | Codex | [openai/codex-plugin-cc](https://github.com/openai/codex-plugin-cc) 별도 설치 ([설치 3단계](#3-codex-플러그인-선택)) |
-| `kexaone` | K-EXAONE 236B | 이 저장소의 `exaone-friendli` 플러그인 + Friendli 토큰 |
+| `kexaone` | K-EXAONE 2.5 | 이 저장소의 `exaone-friendli` 플러그인 + `EXAONE_API_KEY` |
 | `claude-self` | Claude (빈 컨텍스트) | 없음 |
 
 `claude-self`는 이 대화를 못 본 Claude 서브에이전트라 사회자가 이미 받아들인 전제를 되묻는
@@ -241,7 +232,7 @@ open ClaudeCODEXaone/plugins/workflow/skills/korean-report/examples/example-repo
 ```
 ClaudeCODEXaone/
 ├── .claude-plugin/marketplace.json
-├── opencode.json.template          # Friendli provider 설정 견본
+├── opencode.json.template          # EXAONE API provider 설정 견본
 ├── install.sh                      # 플러그인 시스템을 못 쓸 때
 └── plugins/
     ├── exaone-friendli/            # /k-exaone
@@ -260,7 +251,8 @@ ClaudeCODEXaone/
 | `Unknown command` | 플러그인 미설치 | `claude plugin install exaone-friendli workflow` |
 | `opencode CLI not found` | opencode 미설치 | `npm install -g opencode-ai` |
 | `Model not found` | 글로벌 opencode 설정에 provider 미등록 | `~/.config/opencode/opencode.json` 확인 (프로젝트 로컬 파일은 안 읽힘) |
-| 401 Unauthorized | 토큰 만료, 또는 조직 계정인데 팀 헤더 누락 | 토큰 재발급 / `X-Friendli-Team` 추가 |
+| 401 Unauthorized | `EXAONE_API_KEY`가 비었거나 만료됨 | opencode를 띄운 셸에서 `echo $EXAONE_API_KEY` 확인, 키 재발급 |
+| 429 Too Many Requests | 무료 키 한도(초당 1회) 초과 | `/council`처럼 동시에 부를 때 잠시 뒤 다시 실행 |
 | `ProviderModelNotFoundError` | Claude Code 환경변수가 opencode 모델을 덮어씀 | 래퍼가 `--model`을 강제 주입하므로 재실행 |
 | 사내 프록시 뒤에서 TLS 오류 | TLS 검사 프록시가 자체 루트 CA를 주입 | `NODE_EXTRA_CA_CERTS`에 프록시 루트 CA를 지정. 최후 수단으로 `OPENCODE_INSECURE_TLS=1` (인증서 검증이 꺼지므로 권장하지 않음) |
 | `/council`에서 Codex가 빠짐 | codex 플러그인 미설치 | `claude plugin install codex` 또는 그대로 진행 |
@@ -268,8 +260,8 @@ ClaudeCODEXaone/
 ## 라이선스
 
 Apache-2.0. 이 저장소가 호출하는 모델과 서비스에는 각자의 약관과 라이선스가 적용된다 —
-[K-EXAONE](https://huggingface.co/LGAI-EXAONE/K-EXAONE-236B-A23B),
-[FriendliAI](https://friendli.ai/), [opencode](https://opencode.ai),
+[K-EXAONE](https://github.com/LG-AI-EXAONE/K-EXAONE),
+[EXAONE API Platform](https://docs.exaone.ai), [opencode](https://opencode.ai),
 [codex-plugin-cc](https://github.com/openai/codex-plugin-cc) (Apache-2.0).
 
 ---
@@ -278,9 +270,9 @@ Apache-2.0. 이 저장소가 호출하는 모델과 서비스에는 각자의 �
 
 **ClaudeCODEXaone** bundles three things for Claude Code users:
 
-- **`/k-exaone`** — delegate a prompt to [K-EXAONE 236B](https://friendli.ai/models/LGAI-EXAONE/K-EXAONE-236B-A23B),
-  LG AI Research's 236B Hybrid-Attention MoE model (23B active, 256K context, strong Korean),
-  served on FriendliAI's serverless API and routed through the [opencode](https://opencode.ai) CLI.
+- **`/k-exaone`** — delegate a prompt to K-EXAONE 2.5 (`k-exaone_v2.5`), LG AI Research's model
+  served on the public [EXAONE API Platform](https://docs.exaone.ai) (524K context, strong Korean),
+  routed through the [opencode](https://opencode.ai) CLI.
 - **`/council`** — run Codex, K-EXAONE, and a cold-context Claude in parallel over N rounds, with
   Claude moderating and the user steering between rounds. Output lands in one `final.md`.
 - **`korean-report`** — a skill that rewrites an English draft as a proper Korean report:
@@ -289,9 +281,9 @@ Apache-2.0. 이 저장소가 호출하는 모델과 서비스에는 각자의 �
   and a self-contained HTML template.
 
 Install: `claude plugin marketplace add https://github.com/kingsj0405/ClaudeCODEXaone.git`, then
-`claude plugin install exaone-friendli workflow`. You will need `npm i -g opencode-ai` and a
-FriendliAI token. To include Codex in `/council`, also install OpenAI's
+`claude plugin install exaone-friendli workflow`. You will need `npm i -g opencode-ai` and an
+`EXAONE_API_KEY`. To include Codex in `/council`, also install OpenAI's
 [codex-plugin-cc](https://github.com/openai/codex-plugin-cc) — it is not bundled here, and
 `/council` simply drops Codex from the roster if it is missing. See [설치](#설치) above.
 
-Unofficial personal project; not affiliated with Anthropic, OpenAI, LG AI Research, or FriendliAI.
+Unofficial personal project; not affiliated with Anthropic, OpenAI, or LG AI Research.

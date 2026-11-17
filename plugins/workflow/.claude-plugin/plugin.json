@@ -1,7 +1,7 @@
 {
   "name": "workflow",
-  "version": "0.2.0",
-  "description": "Multi-model workflows: /council (round-based deliberation across Claude, Codex, and K-EXAONE) and the korean-report writing skill.",
+  "version": "0.3.0",
+  "description": "Multi-model workflows: /council (round-based deliberation across Claude, Codex, and K-EXAONE), /essay (intent → researched, interactive essay writing), and the korean-report and write-essay skills.",
   "author": {
     "name": "kingsj0405",
     "email": "kingsj0405@gmail.com"

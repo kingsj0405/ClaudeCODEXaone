@@ -5,7 +5,7 @@
     "email": "kingsj0405@gmail.com"
   },
   "metadata": {
-    "description": "Claude Code + Codex + K-EXAONE — multi-model delegation, a council skill, and a Korean report-writing skill."
+    "description": "Claude Code + Codex + K-EXAONE — multi-model delegation, a council command, an essay-writing pipeline, and a Korean report-writing skill."
   },
   "plugins": [
     {
@@ -20,8 +20,8 @@
     },
     {
       "name": "workflow",
-      "description": "Multi-model workflows: /council (round-based deliberation across Claude, Codex, and K-EXAONE) and the korean-report writing skill.",
-      "version": "0.2.0",
+      "description": "Multi-model workflows: /council (round-based deliberation across Claude, Codex, and K-EXAONE), /essay (intent → researched, interactive essay writing), and the korean-report and write-essay skills.",
+      "version": "0.3.0",
       "author": {
         "name": "kingsj0405",
         "email": "kingsj0405@gmail.com"

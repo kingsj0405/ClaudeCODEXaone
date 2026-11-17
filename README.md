@@ -8,6 +8,7 @@ Claude Code 안에서 **Claude · Codex · K-EXAONE** 세 모델을 함께 쓰�
 
 - `/k-exaone` — K-EXAONE 2.5(LG AI Research, EXAONE API Platform)에게 물어본다
 - `/council` — 여러 모델을 라운드 단위로 돌리고 Claude가 사회를 본다
+- `/essay` + `write-essay` 스킬 — intent 한 줄에서 **조사·집필·윤문·공유 문구**까지
 - `korean-report` 스킬 — 영어 초안을 **좋은 한국어 리포트**로 다시 쓴다
 
 > 개인이 만든 비공식 프로젝트입니다. Anthropic · OpenAI · LG AI Research 어디와도
@@ -240,6 +241,39 @@ open ClaudeCODEXaone/plugins/workflow/skills/korean-report/examples/example-repo
 > 읽는다. 그런 곳에서는 clone 후 로컬에서 열거나, GitHub Pages / GitLab Pages를 켜서
 > 직접 서빙해야 한다.
 
+### `/essay` + `write-essay` 스킬 — intent 한 줄에서 발행 직전까지
+
+"이런 글 쓰고 싶어" 한 문장에서 시작해 발행할 수 있는 원고까지 끌고 가는 파이프라인이다. 한 번에
+글을 뽑는 프롬프트가 아니라, **사람이 세 번 개입하는** 절차다.
+
+```
+/essay 수능을 소학에 비유해서 수험생에게 보내는 편지를 쓰고 싶어
+/essay --venue letter --length short 자동화가 일을 줄이지 않는다는 이야기
+/essay --mode revise drafts/my-post.md
+```
+
+1. **의도 읽기** — 문장에서 주장·독자·발행처·분량·금기를 뽑고, 비어 있는 칸만 세 개까지 묻는다.
+2. **뼈대 → 딥리서치** — 한 문장 주장과 절 셋을 먼저 세우고 승인을 받은 뒤, 그 뼈대가 요구하는
+   근거만 조사한다. 모든 수치·인용은 표에 먼저 적고, 확인되지 않은 것은 지운다(지운 것은 보고한다).
+   회사 내부 수치·시스템 이름은 표 단계에서 막는다.
+3. **초안** — 건조하고 날카로운 3단 논증. 요약 블록, 대표 이미지, 소속 고지, 참고자료까지.
+   겹납표(`《》·『』·「」`), 각주 마커(`[^1]`), 한자 병기는 쓰지 않는다.
+4. **윤문과 티키타카** — 먼저 **K-EXAONE 2.5에 한국어 윤문**을 맡긴다(번역투·호흡·어감·훈계조·과장).
+   윤문본이 사실을 건드렸는지 숫자·고유명사·인용을 기계적으로 대조해 되돌린다. 그 위에서 Codex는
+   기술적 정확성과 논리 빈틈을, 빈 컨텍스트의 Claude는 구조와 훈계조를 본다. 사회자는 항목 3~5개만
+   남기고, 사용자와 **한 턴에 한 묶음씩** 고른다. 사용자가 고친 문장은 되돌리지 않는다.
+5. **마무리** — 제목·부제 후보 3안(각각 이유), 블로그 하단 추천·구독 블록, LinkedIn·X·Threads·
+   Instagram 채널별 문구. **게시는 하지 않는다** — 게시는 사용자의 이름으로 남는 일이다.
+
+중간 산출물은 `output/essay-{YYMMDD-HHMM}-{슬러그}/`에 단계별로 쌓이고(`01-intent` … `final`,
+`distribution`), 상태는 `.claude/essay-state.json`에 남아 `/clear` 뒤에도 이어진다. 규칙은 두 곳에
+나뉘어 있다 — 산문 규칙(구조·문장·톤)은
+[`references/style-guide.md`](./plugins/workflow/skills/write-essay/references/style-guide.md),
+기계가 잡는 표기 금지 목록(겹납표·각주 마커·한자 병기·초안 잔재)은
+[`scripts/lint.py`](./plugins/workflow/skills/write-essay/scripts/lint.py)다. 문체를 바꾸려면 두 파일을
+같이 본다. 마지막 검수는 눈이 아니라 린터가 먼저 한다 — 표기 금지 목록을 줄 번호로 잡아 주고,
+`scripts/test_lint.py`가 그 검사 자체를 고정한다.
+
 ---
 
 ## 구조
@@ -256,7 +290,9 @@ ClaudeCODEXaone/
     │   └── scripts/opencode_run.sh
     └── workflow/
         ├── commands/council.md     # /council
-        └── skills/korean-report/   # SKILL.md + 예시 + HTML 템플릿
+        ├── commands/essay.md       # /essay
+        ├── skills/korean-report/   # SKILL.md + 예시 + HTML 템플릿
+        └── skills/write-essay/     # SKILL.md + 규칙 5개 + lint.py·test_lint.py
 ```
 
 ## 트러블슈팅
@@ -291,6 +327,11 @@ Apache-2.0. 이 저장소가 호출하는 모델과 서비스에는 각자의 �
   routed through the [opencode](https://opencode.ai) CLI.
 - **`/council`** — run Codex, K-EXAONE, and a cold-context Claude in parallel over N rounds, with
   Claude moderating and the user steering between rounds. Output lands in one `final.md`.
+- **`/essay` + `write-essay`** — an intent-to-draft writing pipeline. Skeleton first, then targeted
+  fact-checking (unverified claims are removed, not softened), a dry three-claim draft, K-EXAONE 2.5
+  Korean line-editing with a mechanical fact-preservation diff, then Codex and a cold-context Claude
+  critiquing in parallel while the author picks changes one turn at a time. Ends with title options and
+  LinkedIn / X / Threads / Instagram drafts. It never publishes on its own.
 - **`korean-report`** — a skill that rewrites an English draft as a proper Korean report:
   conclusion first, every number attached to its measurement conditions, English terms unpacked
   except where they are the field's standard vocabulary. Ships with a worked before/after example

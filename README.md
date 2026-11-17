@@ -265,12 +265,14 @@ open ClaudeCODEXaone/plugins/workflow/skills/korean-report/examples/example-repo
 5. **마무리** — 제목·부제 후보 3안(각각 이유), 블로그 하단 추천·구독 블록, LinkedIn·X·Threads·
    Instagram 채널별 문구. **게시는 하지 않는다** — 게시는 사용자의 이름으로 남는 일이다.
 
-중간 산출물은 `output/essay-{YYMMDD}-{슬러그}/`에 단계별로 쌓이고(`01-intent` … `final`,
-`distribution`), 상태는 `.claude/essay-state.json`에 남아 `/clear` 뒤에도 이어진다. 문체·표기 규칙은
-[`references/style-guide.md`](./plugins/workflow/skills/write-essay/references/style-guide.md) 한
-파일로 모여 있어, 자기 문체로 바꾸려면 그 파일만 고치면 된다. 마지막 검수는 눈이 아니라
-[`scripts/lint.py`](./plugins/workflow/skills/write-essay/scripts/lint.py)가 먼저 한다 — 겹납표·
-각주 마커·한자 병기·초안 잔재·훈계조·과장을 줄 번호로 잡아 준다.
+중간 산출물은 `output/essay-{YYMMDD-HHMM}-{슬러그}/`에 단계별로 쌓이고(`01-intent` … `final`,
+`distribution`), 상태는 `.claude/essay-state.json`에 남아 `/clear` 뒤에도 이어진다. 규칙은 두 곳에
+나뉘어 있다 — 산문 규칙(구조·문장·톤)은
+[`references/style-guide.md`](./plugins/workflow/skills/write-essay/references/style-guide.md),
+기계가 잡는 표기 금지 목록(겹납표·각주 마커·한자 병기·초안 잔재)은
+[`scripts/lint.py`](./plugins/workflow/skills/write-essay/scripts/lint.py)다. 문체를 바꾸려면 두 파일을
+같이 본다. 마지막 검수는 눈이 아니라 린터가 먼저 한다 — 표기 금지 목록을 줄 번호로 잡아 주고,
+`scripts/test_lint.py`가 그 검사 자체를 고정한다.
 
 ---
 
@@ -290,7 +292,7 @@ ClaudeCODEXaone/
         ├── commands/council.md     # /council
         ├── commands/essay.md       # /essay
         ├── skills/korean-report/   # SKILL.md + 예시 + HTML 템플릿
-        └── skills/write-essay/     # SKILL.md + 규칙 5개 + lint.py
+        └── skills/write-essay/     # SKILL.md + 규칙 5개 + lint.py·test_lint.py
 ```
 
 ## 트러블슈팅

@@ -3,3 +3,4 @@ node_modules/
 output/
 .claude/council-state.json
 opencode.json
+.claude/essay-state.json

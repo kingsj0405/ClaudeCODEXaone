@@ -7,7 +7,7 @@ Usage: `/essay [--venue blog|letter|linkedin] [--length short|long] [--no-sns] [
 Defaults:
 - `--mode new` (a fresh piece from the intent)
 - `--venue blog`
-- `--length long` (3,500–5,000자)
+- `--length long` (3,500~5,000자, 기본) / `--length short` (2,000자) — 분량 숫자는 여기서만 정의한다
 - share drafts included unless `--no-sns`
 
 Examples:
@@ -29,7 +29,7 @@ Examples:
    the point of this command.
 
 3. **Report the session folder** as soon as it exists:
-   `output/essay-{YYMMDD}-{slug}/`, with the intent and thesis in one line each.
+   `output/essay-{YYMMDD-HHMM}-{slug}/`, with the intent and thesis in one line each.
 
 4. **Modes.**
    - `new` — stages 1–5.

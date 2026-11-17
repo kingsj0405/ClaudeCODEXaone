@@ -16,7 +16,8 @@ import sys
 HARD = [
     ("금지문자", re.compile(r"[《》『』「」]"), "겹납표·홑납표는 쓰지 않는다. 따옴표로 바꾼다."),
     ("각주 마커", re.compile(r"\[\^[^\]]*\]"), "본문은 [1], 끝에 참고자료."),
-    ("한자 병기", re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]"), "한글만 쓴다(예: 愼獨 → 신독)."),
+    # 병기 패턴만 잡는다: 한글 뒤 괄호 속 한자 (`신독(愼獨)`). 원제 인용(`小學`)은 규칙 밖이다.
+    ("한자 병기", re.compile(r"[가-힣]\s*\(\s*[\u3400-\u4dbf\u4e00-\u9fff]+\s*\)"), "한자 병기를 지운다(예: 신독(愼獨) → 신독)."),
     ("초안 잔재", re.compile(r"\[(확인 필요|리서치|검증 필요|TODO|TBD|작성 예정)"), "리서치 표로 옮기고 본문에서 지운다."),
 ]
 
@@ -53,6 +54,8 @@ def check(path):
         if line.lstrip().startswith("```"):
             in_fence = not in_fence
             continue
+        if in_fence:
+            continue  # 코드 블록 안은 렌더링되는 산문이 아니다
         if line.lstrip().startswith(("![", "http://", "https://")):
             continue  # 이미지 대체텍스트·링크는 규칙 밖
         bold += len(re.findall(r"\*\*[^*]+\*\*", line))
